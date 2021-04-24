@@ -63,9 +63,22 @@ export default function Episode({ episode }: EpisodeProps) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
+  const { data } = await api.get('episodes', {
+    params: {
+      _limit: 2,
+      _sort: 'published_at',
+      _order: 'desc'
+    }
+  })
+
+  const paths = data.map(episode => {     //isso daqui é pro sistemas gerar as 
+    return {
+      params: {slug: episode.id} //páginas mais importantes de forma estática, 
+    }
+  })                            //e deixar só as menos acessadas pare serem geradas dinamicamente.
   return {
-    paths: [],
-    fallback: 'blocking'
+    paths,
+    fallback: 'blocking'    //esse parâmetro cuida disso.
   }
 }
 
